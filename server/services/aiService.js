@@ -4,7 +4,6 @@ import NodeCache from 'node-cache';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
-import https from 'https';
 
 // Initialize dotenv
 dotenv.config();
@@ -31,10 +30,7 @@ const aiRateLimiter = rateLimit({
   trustProxy: true
 });
 
-// Create a custom HTTPS agent that doesn't reject unauthorized certificates
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false
-});
+
 
 async function searchTavily(subject) {
   // Cache key for Tavily search
@@ -73,7 +69,7 @@ async function searchTavily(subject) {
           "udacity.com",
         ]
       }),
-      agent: httpsAgent // Use our custom HTTPS agent
+
     });
 
     if (!response.ok) {

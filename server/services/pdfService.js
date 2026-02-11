@@ -4,7 +4,7 @@ import { ChatGroq } from "@langchain/groq";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { Embeddings } from "@langchain/core/embeddings";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import NodeCache from "node-cache";
 import dotenv from "dotenv";
@@ -22,13 +22,105 @@ const model = new ChatGroq({
   modelName: "llama-3.3-70b-versatile",
 });
 
-// Initialize HuggingFace embeddings with optimized settings
-const embeddings = new HuggingFaceInferenceEmbeddings({
-  apiKey: process.env.HUGGINGFACE_API_KEY,
-  model: "sentence-transformers/all-MiniLM-L6-v2",
-  batchSize: 512, // Process more text at once
-  stripNewLines: true, // Remove unnecessary newlines
-});
+// Local TF-IDF based embeddings - no external API needed
+class LocalTFIDFEmbeddings extends Embeddings {
+  constructor(fields) {
+    super(fields ?? {});
+    this.vocabulary = new Map();
+    this.idfValues = new Map();
+    this.vocabBuilt = false;
+    this.dimensions = 384; // Fixed dimension for embedding vectors
+  }
+
+  // Tokenize text into words
+  _tokenize(text) {
+    return text
+      .toLowerCase()
+      .replace(/[^\w\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 1);
+  }
+
+  // Build vocabulary from a set of texts
+  _buildVocabulary(texts) {
+    const docFreq = new Map();
+    const allTokens = new Set();
+
+    texts.forEach((text) => {
+      const tokens = new Set(this._tokenize(text));
+      tokens.forEach((token) => {
+        allTokens.add(token);
+        docFreq.set(token, (docFreq.get(token) || 0) + 1);
+      });
+    });
+
+    // Select top tokens by document frequency and assign indices
+    const sortedTokens = [...allTokens]
+      .sort((a, b) => (docFreq.get(b) || 0) - (docFreq.get(a) || 0))
+      .slice(0, this.dimensions);
+
+    sortedTokens.forEach((token, idx) => {
+      this.vocabulary.set(token, idx);
+      this.idfValues.set(
+        token,
+        Math.log(texts.length / (1 + (docFreq.get(token) || 0)))
+      );
+    });
+
+    this.vocabBuilt = true;
+  }
+
+  // Generate embedding vector for a single text
+  _vectorize(text) {
+    const tokens = this._tokenize(text);
+    const termFreq = new Map();
+
+    tokens.forEach((token) => {
+      termFreq.set(token, (termFreq.get(token) || 0) + 1);
+    });
+
+    const vector = new Array(this.dimensions).fill(0);
+    const maxFreq = Math.max(...termFreq.values(), 1);
+
+    termFreq.forEach((freq, token) => {
+      const idx = this.vocabulary.get(token);
+      if (idx !== undefined) {
+        // TF-IDF: normalized term frequency * inverse document frequency
+        const tf = freq / maxFreq;
+        const idf = this.idfValues.get(token) || 0;
+        vector[idx] = tf * idf;
+      }
+    });
+
+    // Normalize to unit vector
+    const magnitude = Math.sqrt(
+      vector.reduce((sum, val) => sum + val * val, 0)
+    );
+    if (magnitude > 0) {
+      for (let i = 0; i < vector.length; i++) {
+        vector[i] /= magnitude;
+      }
+    }
+
+    return vector;
+  }
+
+  async embedDocuments(documents) {
+    const cleanDocs = documents.map((text) => text.replace(/\n/g, " "));
+    if (!this.vocabBuilt) {
+      this._buildVocabulary(cleanDocs);
+    }
+    return cleanDocs.map((doc) => this._vectorize(doc));
+  }
+
+  async embedQuery(document) {
+    const clean = document.replace(/\n/g, " ");
+    return this._vectorize(clean);
+  }
+}
+
+// Initialize local embeddings (no API key needed)
+const embeddings = new LocalTFIDFEmbeddings();
 
 // Vector store to hold embeddings
 const vectorStores = new Map();

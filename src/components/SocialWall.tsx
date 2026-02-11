@@ -5,7 +5,7 @@ import { Marquee } from "@/components/magicui/marquee";
 
 export default function SocialWall() {
   return (
-    <Marquee className="py-8 px-4 w-full bg-[#EFE9D5]">
+    <Marquee className="py-8 px-4 w-full bg-[#F8F6F0]">
       {tweets.map((tweetId) => (
         <div
           key={tweetId}

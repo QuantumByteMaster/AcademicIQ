@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import mongoose from "mongoose";
 import { aiRateLimiter } from "./services/aiService.js";
 import dotenv from "dotenv";
@@ -25,20 +26,20 @@ const port = process.env.PORT || 5000;
 
 // Trust proxy - required for rate limiting behind reverse proxies
 app.set("trust proxy", 1);
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(helmet());
 
-// Middleware
+// Parse CORS origins from env or use defaults
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+  : ['http://localhost:3000'];
+
 app.use(
   cors({
-    origin: [
-      "https://academiciq-pearl.vercel.app",
-      "http://localhost:3000",
-      "https://www.academiciq.ink",
-      "https://academiciq.ink",
-    ],
+    origin: corsOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-user-id", "x-internal-secret"],
   })
 );
 
@@ -71,10 +72,24 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Apply routes directly without auth middleware
-app.use("/generate-plan", generatePlanRouter);
-app.use("/curate-resources", curateResourcesRouter);
-app.use("/pdf", pdfChatRouter);
+// Internal API secret middleware — only allows requests from Next.js backend
+const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET;
+function requireInternalSecret(req, res, next) {
+  if (!INTERNAL_SECRET) {
+    // If no secret configured, log warning and allow (dev mode)
+    console.warn("WARNING: INTERNAL_API_SECRET is not set. Skipping internal auth check.");
+    return next();
+  }
+  const provided = req.headers["x-internal-secret"];
+  if (provided !== INTERNAL_SECRET) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+  next();
+}
+
+app.use("/generate-plan", requireInternalSecret, generatePlanRouter);
+app.use("/curate-resources", requireInternalSecret, curateResourcesRouter);
+app.use("/pdf", requireInternalSecret, pdfChatRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

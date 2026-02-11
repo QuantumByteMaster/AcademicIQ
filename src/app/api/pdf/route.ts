@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-
-// List all PDFs
+const apiUrl = process.env.API_URL || 'http://localhost:5000';
+const internalSecret = process.env.INTERNAL_API_SECRET || '';
 export async function GET(req: NextRequest) {
   try {
     
@@ -12,14 +12,13 @@ export async function GET(req: NextRequest) {
     });
 
     if (!token || !token.id) {
-      console.log('No authentication token or user ID found');
       return NextResponse.json(
         { error: 'Unauthorized - Please sign in' },
         { status: 401 }
       );
     }
 
-    const apiUrl = process.env.API_URL || 'http://localhost:5000';
+
     
     try {
       // Forward the request with user ID in headers
@@ -29,6 +28,7 @@ export async function GET(req: NextRequest) {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'x-user-id': token.id.toString(),
+          'x-internal-secret': internalSecret,
         },
         cache: 'no-store'
       });
@@ -86,12 +86,13 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    const apiUrl = process.env.API_URL || 'http://localhost:5000';
+
     
     const response = await fetch(`${apiUrl}/pdf/upload`, {
       method: 'POST',
       headers: {
-        'X-User-Id': token.sub || '',
+        'X-User-Id': (token.id as string) || '',
+        'x-internal-secret': internalSecret,
       },
       body: formData,
     });
@@ -136,12 +137,13 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const apiUrl = process.env.API_URL || 'http://localhost:5000';
+
     
     const response = await fetch(`${apiUrl}/pdf/${id}`, {
       method: 'DELETE',
       headers: {
-        'X-User-Id': token.sub || '',
+        'X-User-Id': (token.id as string) || '',
+        'x-internal-secret': internalSecret,
       },
     });
 

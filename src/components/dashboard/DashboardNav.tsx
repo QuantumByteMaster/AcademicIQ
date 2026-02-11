@@ -109,7 +109,7 @@ export function DashboardNav({ className, onCollapse, ...props }: DashboardNavPr
         <div className="hidden md:block">
           <div className={cn("mb-6", isCollapsed ? "px-2" : "px-4")}>
             <div className="flex flex-col items-center mb-4">
-              <Avatar className="h-10 w-10 bg-[#F2EDE0]">
+              <Avatar className="h-10 w-10 bg-[#EDE8E0]">
                 <AvatarImage 
                   src={session?.user?.image || "/images/default-avatar.png"} 
                   alt={session?.user?.name || '@user'} 
@@ -183,7 +183,7 @@ export function DashboardNav({ className, onCollapse, ...props }: DashboardNavPr
         </div>
 
         {/* Mobile View */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0" style={{ backgroundColor: '#EFE9D5' }}>
+        <div className="md:hidden fixed bottom-0 left-0 right-0" style={{ backgroundColor: '#F8F6F0' }}>
           <div className="flex justify-around items-center overflow-x-auto py-3 px-2">
             {navSections.flatMap(section => section.items).map((item) => (
               <Link

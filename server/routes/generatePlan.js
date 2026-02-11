@@ -49,9 +49,11 @@ router.post('/', async (req, res) => {
 
     // Check for any existing active plans with same subject BEFORE generating new plan
     const normalizedSubject = subject.trim().toLowerCase().replace(/\s+/g, ' ');
+    // Escape special regex characters to prevent ReDoS
+    const escapedSubject = normalizedSubject.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const existingPlan = await StudyPlan.findOne({
       userId,
-      'overview.subject': { $regex: new RegExp(`^${normalizedSubject}$`, 'i') },
+      'overview.subject': { $regex: new RegExp(`^${escapedSubject}$`, 'i') },
       isActive: true
     });
 
@@ -86,18 +88,19 @@ router.post('/', async (req, res) => {
 router.delete('/:planId', async (req, res) => {
   try {
     const { planId } = req.params;
+    const userId = req.headers['x-user-id'];
     
-    if (!planId) {
+    if (!planId || !userId) {
       return res.status(400).json({
         success: false,
         error: 'INVALID_INPUT',
-        message: 'Plan ID is required'
+        message: 'Plan ID and userId are required'
       });
     }
 
-    // Instead of deleting, we'll update isActive to false
-    const updatedPlan = await StudyPlan.findByIdAndUpdate(
-      planId,
+    // Soft-delete only if owned by this user
+    const updatedPlan = await StudyPlan.findOneAndUpdate(
+      { _id: planId, userId },
       { isActive: false },
       { new: true }
     );

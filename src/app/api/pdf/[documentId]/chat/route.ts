@@ -1,23 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { headers } from 'next/headers';
+import { getToken } from 'next-auth/jwt';
 
 const apiUrl = process.env.API_URL || 'http://localhost:5000';
+const internalSecret = process.env.INTERNAL_API_SECRET || '';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { documentId: string } }
 ) {
   try {
-    const headersList = headers();
-    const userId = headersList.get('x-user-id');
-    
-    if (!userId) {
+    // Use getToken to authenticate instead of reading x-user-id from headers
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    if (!token || !token.id) {
       return NextResponse.json(
-        { error: 'Unauthorized - User ID is required' },
+        { error: 'Unauthorized - Please sign in' },
         { status: 401 }
       );
     }
 
+    const userId = token.id as string;
     const { documentId } = params;
     const body = await request.json();
 
@@ -26,6 +31,7 @@ export async function POST(
       headers: {
         'Content-Type': 'application/json',
         'x-user-id': userId,
+        'x-internal-secret': internalSecret,
       },
       body: JSON.stringify(body),
     });
@@ -47,4 +53,4 @@ export async function POST(
       { status: 500 }
     );
   }
-} 
+}

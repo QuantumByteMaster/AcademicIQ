@@ -4,87 +4,91 @@
 
 @layer base {
   :root {
-    /* Base Colors */
-    --color-navy-900: #27445D;
-    --color-navy-800: #2D4D69;
-    --color-navy-700: #335775;
+    /* Base Colors — Deep Focus Blue + Warm Amber Study Palette */
+    --color-indigo-900: #1E3A5F;
+    --color-indigo-800: #264A73;
+    --color-indigo-700: #2E5A87;
     
-    --color-teal-900: #497D74;
-    --color-teal-800: #538B81;
-    --color-teal-700: #5D998E;
+    --color-blue-900: #1D4ED8;
+    --color-blue-800: #2563EB;
+    --color-blue-700: #3B82F6;
     
-    --color-aqua-900: #71BBB2;
-    --color-aqua-700: #8AC7C0;
-    --color-aqua-500: #A3D3CD;
-    --color-aqua-300: #BCDFD9;
-    --color-aqua-100: #D5EBE7;
+    --color-green-900: #2D6A4F;
+    --color-green-800: #357A5B;
+    --color-green-700: #40916C;
     
-    --color-cream-900: #EFE9D5;
-    --color-cream-700: #F2EDE0;
-    --color-cream-500: #F5F1EA;
-    --color-cream-300: #F8F5F1;
-    --color-cream-100: #FBFAF8;
+    --color-amber-900: #E76F51;
+    --color-amber-700: #F4A261;
+    --color-amber-500: #F4B982;
+    --color-amber-300: #F7D1A6;
+    --color-amber-100: #FBE8D3;
     
-    /* System colors mapped to new scheme */
-    --background: var(--color-cream-900);
-    --foreground: var(--color-navy-900);
+    --color-warm-900: #F8F6F0;
+    --color-warm-700: #EDE8E0;
+    --color-warm-500: #E3DDD4;
+    --color-warm-300: #D4C9B8;
+    --color-warm-100: #C5BAAB;
+    
+    /* System colors mapped to study scheme */
+    --background: var(--color-warm-900);
+    --foreground: var(--color-indigo-900);
     
     --card: white;
-    --card-foreground: var(--color-navy-900);
+    --card-foreground: var(--color-indigo-900);
     
     --popover: white;
-    --popover-foreground: var(--color-navy-900);
+    --popover-foreground: var(--color-indigo-900);
     
-    --primary: var(--color-navy-900);
+    --primary: var(--color-blue-800);
     --primary-foreground: white;
     
-    --secondary: var(--color-teal-900);
+    --secondary: var(--color-green-900);
     --secondary-foreground: white;
     
-    --muted: var(--color-cream-700);
-    --muted-foreground: var(--color-navy-800);
+    --muted: var(--color-warm-700);
+    --muted-foreground: var(--color-indigo-800);
     
-    --accent: var(--color-aqua-500);
-    --accent-foreground: var(--color-navy-900);
+    --accent: var(--color-amber-500);
+    --accent-foreground: var(--color-indigo-900);
     
     --destructive: #b9004b;
     --destructive-foreground: white;
 
-    --border: var(--color-aqua-300);
-    --input: var(--color-aqua-300);
-    --ring: var(--color-navy-900);
+    --border: var(--color-warm-300);
+    --input: var(--color-warm-300);
+    --ring: var(--color-blue-800);
     
     --radius: 0.5rem;
   }
  
   .dark {
-    --background: var(--color-navy-900);
+    --background: var(--color-indigo-900);
     --foreground: white;
     
-    --card: var(--color-navy-800);
+    --card: var(--color-indigo-800);
     --card-foreground: white;
     
-    --popover: var(--color-navy-800);
+    --popover: var(--color-indigo-800);
     --popover-foreground: white;
     
-    --primary: var(--color-aqua-500);
-    --primary-foreground: var(--color-navy-900);
+    --primary: var(--color-amber-500);
+    --primary-foreground: var(--color-indigo-900);
     
-    --secondary: var(--color-navy-800);
+    --secondary: var(--color-indigo-800);
     --secondary-foreground: white;
     
-    --muted: var(--color-navy-800);
-    --muted-foreground: var(--color-cream-900);
+    --muted: var(--color-indigo-800);
+    --muted-foreground: var(--color-warm-900);
     
-    --accent: var(--color-navy-800);
+    --accent: var(--color-indigo-800);
     --accent-foreground: white;
     
     --destructive: #ff6b9a;
     --destructive-foreground: white;
     
-    --border: var(--color-navy-800);
-    --input: var(--color-navy-800);
-    --ring: var(--color-aqua-500);
+    --border: var(--color-indigo-800);
+    --input: var(--color-indigo-800);
+    --ring: var(--color-amber-500);
   }
 }
 
@@ -134,16 +138,16 @@ p {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-navy-900);
+  background: var(--color-indigo-900);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-teal-900);
+  background: var(--color-green-900);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-aqua-500);
+  background: var(--color-amber-500);
 }
 
 /* Hover effects */
@@ -152,12 +156,12 @@ p {
 }
 
 .hover-highlight:hover {
-  background-color: var(--color-cream-700);
+  background-color: var(--color-warm-700);
 }
 
 /* Focus styles */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-navy-900)] focus:ring-offset-2 focus:ring-offset-[var(--background)];
+  @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-indigo-900)] focus:ring-offset-2 focus:ring-offset-[var(--background)];
 }
 
 /* Keep existing animations */
@@ -202,12 +206,12 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-teal-900);
+  background: var(--color-green-900);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-navy-900);
+  background: var(--color-indigo-900);
 }
 
 /* Custom animations */
@@ -247,5 +251,5 @@ p {
 
 .pill-hover:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(39, 68, 93, 0.2);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
 }

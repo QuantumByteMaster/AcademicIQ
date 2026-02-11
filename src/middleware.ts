@@ -5,7 +5,8 @@ import type { NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  const isPublicPath = path === "/" || path === "/register" || path === "/signin";
+  const isPublicPath =
+    path === "/" || path === "/register" || path === "/signin" || path === "/recover";
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
@@ -25,6 +26,7 @@ export const config = {
     "/",
     "/register",
     "/signin",
+    "/recover",
     "/home",
     "/study-plan",
     "/resources",
@@ -32,5 +34,7 @@ export const config = {
     "/analytics",
     "/settings",
     "/profile",
+    "/notes",
+    "/pdf",
   ],
 }; 

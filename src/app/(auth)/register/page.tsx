@@ -17,7 +17,7 @@ export default function RegisterPage() {
   }, [session, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-6 sm:py-12 bg-[#EFE9D5] px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen py-6 sm:py-12 bg-[#F8F6F0] px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md mb-6 sm:mb-8">
         <h2 className="mt-4 sm:mt-6 text-center text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
           Welcome to AcademicIQ
@@ -34,7 +34,7 @@ export default function RegisterPage() {
           <SignUpForm />
           <p className="mt-4 text-center text-xs sm:text-sm text-gray-600">
             Already have an account?{" "}
-            <Link href="/signin" className="text-[#7fb236] hover:underline">
+            <Link href="/signin" className="text-[#2563EB] hover:underline">
               Sign in
             </Link>
           </p>

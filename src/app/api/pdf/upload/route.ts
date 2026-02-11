@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
+const internalSecret = process.env.INTERNAL_API_SECRET || '';
+
 export async function POST(req: NextRequest) {
   try {
     // Get the session token
@@ -35,7 +37,8 @@ export async function POST(req: NextRequest) {
     const response = await fetch(`${apiUrl}/pdf/upload`, {
       method: 'POST',
       headers: {
-        'X-User-Id': token.sub || '',
+        'X-User-Id': (token.id as string) || '',
+        'x-internal-secret': internalSecret,
       },
       body: backendFormData,
     });

@@ -49,11 +49,11 @@ interface SessionData {
 
 // Custom theme for the calendar using our color scheme
 const customTheme = {
-  level0: 'var(--color-cream-900)',
-  level1: 'var(--color-aqua-100)',
-  level2: 'var(--color-aqua-500)',
-  level3: 'var(--color-teal-800)',
-  level4: 'var(--color-navy-900)',
+  level0: 'var(--color-warm-900)',
+  level1: 'var(--color-amber-100)',
+  level2: 'var(--color-amber-500)',
+  level3: 'var(--color-green-800)',
+  level4: 'var(--color-indigo-900)',
 };
 
 export default function DashboardHome() {
@@ -137,7 +137,7 @@ export default function DashboardHome() {
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
-        <PacmanLoader color="#538B81" />
+        <PacmanLoader color="#2D6A4F" />
       </div>
     );
   }

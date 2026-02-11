@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
+const internalSecret = process.env.INTERNAL_API_SECRET || '';
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { documentId: string } }
@@ -25,7 +27,8 @@ export async function GET(
     const response = await fetch(`${apiUrl}/pdf/${documentId}/history`, {
       headers: {
         'Content-Type': 'application/json',
-        'X-User-Id': token.sub || '',
+        'X-User-Id': (token.id as string) || '',
+        'x-internal-secret': internalSecret,
       },
     });
 

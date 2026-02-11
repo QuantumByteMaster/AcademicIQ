@@ -23,7 +23,7 @@ export default function ResourcesPage() {
   const fetchResources = useCallback(async () => {
     if (!session?.user?.id) return;
     try {
-      const data = await apiClient.getCuratedResources(session.user.id);
+      const data = await apiClient.getCuratedResources();
       console.log("Fetched resources data:", data);
       
       if (data.error) {

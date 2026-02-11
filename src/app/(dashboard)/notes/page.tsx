@@ -70,7 +70,7 @@ export default function NotesPage() {
 
   if (loading) {
     return <div className="fixed inset-0 flex items-center justify-center">
-      <PacmanLoader color="#538B81" />
+      <PacmanLoader color="#2D6A4F" />
     </div>
   }
 

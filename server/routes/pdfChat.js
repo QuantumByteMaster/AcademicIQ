@@ -123,15 +123,13 @@ router.post('/upload', upload.single('pdf'), async (req, res) => {
     } catch (processingError) {
       console.error('Error processing PDF:', processingError);
       res.status(500).json({ 
-        error: 'Error processing PDF file',
-        details: processingError.message 
+        error: 'Error processing PDF file'
       });
     }
   } catch (error) {
     console.error('Error in upload route:', error);
     res.status(500).json({ 
-      error: 'Server error during upload',
-      details: error.message 
+      error: 'Server error during upload'
     });
   }
 });
@@ -210,7 +208,7 @@ router.post('/:id/chat', async (req, res) => {
     });
   } catch (error) {
     console.error('Error in PDF chat:', error);
-    res.status(500).json({ error: error.message || 'Failed to process chat request' });
+    res.status(500).json({ error: 'Failed to process chat request' });
   }
 });
 

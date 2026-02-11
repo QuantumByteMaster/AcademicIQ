@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
+const internalSecret = process.env.INTERNAL_API_SECRET || '';
+
 // Get PDF document
 export async function GET(
   req: NextRequest,
@@ -27,26 +29,22 @@ export async function GET(
     const response = await fetch(`${apiUrl}/pdf/${documentId}`, {
       headers: {
         'Content-Type': 'application/json',
-        'X-User-Id': token.sub || '', // Forward the user ID
+        'X-User-Id': (token.id as string) || '',
+        'x-internal-secret': internalSecret,
       },
     });
 
     if (!response.ok) {
       const data = await response.json();
-      throw new Error(data.error || 'Failed to fetch PDF');
+      return NextResponse.json(
+        { error: data.error || 'Failed to fetch PDF' },
+        { status: response.status }
+      );
     }
 
-    // Get the PDF data as an array buffer
-    const pdfBuffer = await response.arrayBuffer();
-
-    // Return the PDF with proper headers
-    return new NextResponse(pdfBuffer, {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'inline',
-        'Content-Length': pdfBuffer.byteLength.toString(),
-      },
-    });
+    // The backend returns JSON with { data (base64), title, pageCount }
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (err) {
     console.error('Error fetching PDF:', err);
     const error = err as Error;
@@ -85,11 +83,12 @@ export async function POST(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-User-Id': token.sub || '', // Forward the user ID
+          'X-User-Id': (token.id as string) || '',
+          'x-internal-secret': internalSecret,
         },
         body: JSON.stringify({
           ...body,
-          userId: token.sub, // Include user ID in the request body
+          userId: token.id,
         }),
       }
     );
@@ -109,4 +108,4 @@ export async function POST(
       { status: 500 }
     );
   }
-} 
+}

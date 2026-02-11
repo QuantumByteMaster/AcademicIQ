@@ -24,7 +24,7 @@ export default function StudyPlanPage() {
     if (!session?.user?.id) return;
     try {
       setLoading(true);
-      const data = await apiClient.getStudyPlan(session.user.id);
+      const data = await apiClient.getStudyPlan();
       if (data.error) {
         console.error("API returned error:", data.error);
         toast({

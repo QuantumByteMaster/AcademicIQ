@@ -170,7 +170,7 @@ export default function PdfChat({ documentId }: PdfChatProps) {
     return (
       <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <PacmanLoader color="#538B81" />
+          <PacmanLoader color="#2D6A4F" />
         </div>
       </div>
     );

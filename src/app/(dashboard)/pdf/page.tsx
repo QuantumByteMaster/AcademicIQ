@@ -167,7 +167,7 @@ export default function PdfListPage() {
   if (status === 'loading') {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
-         <PacmanLoader color="#538B81" />
+         <PacmanLoader color="#2D6A4F" />
       </div>
     );
   }
@@ -222,7 +222,7 @@ export default function PdfListPage() {
         <div className="min-h-[calc(100vh-16rem)] bg-card rounded-lg">
           {isLoading ? (
             <div className="flex justify-center items-center h-[calc(100vh-16rem)]">
-              <PacmanLoader color="#538B81" />
+              <PacmanLoader color="#2D6A4F" />
             </div>
           ) : documents.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)] text-muted-foreground">

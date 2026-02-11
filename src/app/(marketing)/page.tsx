@@ -20,18 +20,18 @@ export default function Page() {
 
   const features = [
     {
-      icon: <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-[#7fb236]" />,
+      icon: <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-[#2563EB]" />,
       title: "Personalized Study Plans",
       description:
         "Get tailored study plans based on your goals and learning style.",
     },
     {
-      icon: <Brain className="h-5 w-5 sm:h-6 sm:w-6 text-[#7fb236]" />,
+      icon: <Brain className="h-5 w-5 sm:h-6 sm:w-6 text-[#2563EB]" />,
       title: "AI-Curated Resources",
       description: "Access the best learning materials curated by our AI.",
     },
     {
-      icon: <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-[#7fb236]" />,
+      icon: <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-[#2563EB]" />,
       title: "Time Management",
       description:
         "Manage your time effectively and stay on top of your studies.",
@@ -39,7 +39,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-16 bg-[#EFE9D5]">
+    <div className="container mx-auto px-4 py-8 sm:py-16 bg-[#F8F6F0]">
       <HeroSection
         title="Welcome to"
         highlightedText="AcademicIQ"

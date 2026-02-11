@@ -48,10 +48,13 @@ router.post('/', async (req, res) => {
     // Normalize the subject string
     const normalizedSubject = subject.trim().toLowerCase().replace(/\s+/g, ' ');
 
+    // Escape special regex characters to prevent ReDoS
+    const escapedSubject = normalizedSubject.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     // Check for existing resources with case-insensitive matching
     const existingResources = await CuratedResource.findOne({
       userId,
-      topic: { $regex: new RegExp(`^${normalizedSubject}$`, 'i') }
+      topic: { $regex: new RegExp(`^${escapedSubject}$`, 'i') }
     });
 
     if (existingResources) {
@@ -122,16 +125,17 @@ router.post('/', async (req, res) => {
 router.delete('/:resourceId', async (req, res) => {
   try {
     const { resourceId } = req.params;
+    const userId = req.headers['x-user-id'];
     
-    if (!resourceId) {
+    if (!resourceId || !userId) {
       return res.status(400).json({
         success: false,
-        error: 'resourceId is required'
+        error: 'resourceId and userId are required'
       });
     }
 
-    // Find and delete the resource
-    const deletedResource = await CuratedResource.findByIdAndDelete(resourceId);
+    // Find and delete the resource — only if owned by this user
+    const deletedResource = await CuratedResource.findOneAndDelete({ _id: resourceId, userId });
     
     if (!deletedResource) {
       return res.status(404).json({

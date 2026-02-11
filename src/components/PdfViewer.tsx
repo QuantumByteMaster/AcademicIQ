@@ -451,7 +451,7 @@ export default function PdfViewer({ documentId, currentPage, onPageChange }: Pdf
             </div>
           ) : uiState.loading ? (
             <div className="fixed inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50">
-              <PacmanLoader color="#538B81" />
+              <PacmanLoader color="#2D6A4F" />
             </div>
           ) : (
             <div 
@@ -483,7 +483,7 @@ export default function PdfViewer({ documentId, currentPage, onPageChange }: Pdf
                     <MemoizedPage {...pageOptions} />
                     {isPageLoading && (
                       <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-                        <PacmanLoader color="#538B81" />
+                        <PacmanLoader color="#2D6A4F" />
                       </div>
                     )}
                   </div>
