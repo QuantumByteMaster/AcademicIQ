@@ -66,7 +66,7 @@ export default function ChatInterface({
     <div className="flex flex-col h-full bg-background rounded-lg border-2 border-black relative">
       {/* Chat Header */}
       <div className="p-3 sm:p-4 border-b border-black">
-        <h2 className="text-lg font-semibold">Scriba Assistant</h2>
+        <h2 className="text-lg font-semibold">Insight Assistant</h2>
         <p className="text-sm text-muted-foreground">Ask questions about your document</p>
       </div>
 

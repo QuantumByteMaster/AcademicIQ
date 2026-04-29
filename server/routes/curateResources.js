@@ -1,98 +1,102 @@
-import express from 'express';
-import { searchTavily, curateResources } from '../services/aiService.js';
-import CuratedResource from '../models/curatedResource.js';
+import express from "express";
+import { searchTavily, curateResources } from "../services/aiService.js";
+import CuratedResource from "../models/curatedResource.js";
 
 const router = express.Router();
 
 // Get resources for a user
-router.get('/:userId', async (req, res) => { 
+router.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     if (!userId) {
       return res.status(400).json({
         success: false,
-        error: 'userId is required'
+        error: "userId is required",
       });
     }
 
-    const resources = await CuratedResource.find({ userId })
-      .sort({ createdAt: -1 });
-    
-    res.json({ 
-      success: true, 
-      resources 
+    const resources = await CuratedResource.find({ userId }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      resources,
     });
   } catch (error) {
-    console.error('Error fetching resources:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to fetch resources' 
+    console.error("Error fetching resources:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch resources",
     });
   }
 });
 
 // Create new resources
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { subject, userId } = req.body;
 
     if (!subject?.trim() || !userId) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'INVALID_INPUT',
-        message: 'Subject and userId are required' 
+      return res.status(400).json({
+        success: false,
+        error: "INVALID_INPUT",
+        message: "Subject and userId are required",
       });
     }
 
     // Normalize the subject string
-    const normalizedSubject = subject.trim().toLowerCase().replace(/\s+/g, ' ');
+    const normalizedSubject = subject.trim().toLowerCase().replace(/\s+/g, " ");
 
     // Escape special regex characters to prevent ReDoS
-    const escapedSubject = normalizedSubject.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedSubject = normalizedSubject.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&",
+    );
 
     // Check for existing resources with case-insensitive matching
     const existingResources = await CuratedResource.findOne({
       userId,
-      topic: { $regex: new RegExp(`^${escapedSubject}$`, 'i') }
+      topic: { $regex: new RegExp(`^${escapedSubject}$`, "i") },
     });
 
     if (existingResources) {
       return res.status(400).json({
         success: false,
-        error: 'RESOURCE_EXISTS',
-        message: `You already have curated resources for "${subject}". Please check your existing resources.`
+        error: "RESOURCE_EXISTS",
+        message: `You already have curated resources for "${subject}". Please check your existing resources.`,
       });
     }
 
     // If no existing resources, generate new ones
     const searchData = await searchTavily(subject);
-    
+
     if (!searchData || !searchData.results) {
       return res.status(500).json({
         success: false,
-        error: 'SEARCH_FAILED',
-        message: 'Failed to search for resources. Please try again.'
+        error: "SEARCH_FAILED",
+        message: "Failed to search for resources. Please try again.",
       });
     }
 
     const curatedData = await curateResources(searchData, subject);
-    
+
     if (!curatedData || !curatedData.resources) {
       return res.status(500).json({
         success: false,
-        error: 'CURATION_FAILED',
-        message: 'Failed to curate resources. Please try again.'
+        error: "CURATION_FAILED",
+        message: "Failed to curate resources. Please try again.",
       });
     }
 
     // Validate and transform resources to match schema
-    const validatedResources = curatedData.resources.map(resource => ({
-      title: resource.title || 'Untitled Resource',
-      link: resource.url || '#', // Map url to link
-      type: resource.format || 'website',
-      description: resource.description || 'No description available',
-      benefits: resource.benefits || ['Resource for learning ' + subject]
+    const validatedResources = curatedData.resources.map((resource) => ({
+      title: resource.title || "Untitled Resource",
+      link: resource.url || "#", // Map url to link
+      type: resource.format || "website",
+      description: resource.description || "No description available",
+      benefits: resource.benefits || ["Resource for learning " + subject],
     }));
 
     // Create new resource document
@@ -100,60 +104,63 @@ router.post('/', async (req, res) => {
       userId,
       topic: normalizedSubject, // Use topic instead of subject
       resources: validatedResources,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     });
 
     const savedResource = await newResource.save();
 
     return res.json({
       success: true,
-      message: 'Resources curated successfully',
-      resources: savedResource
+      message: "Resources curated successfully",
+      resources: savedResource,
     });
-
   } catch (error) {
-    console.error('Error in resource curation:', error);
+    console.error("Error in resource curation:", error);
     return res.status(500).json({
       success: false,
-      error: 'SERVER_ERROR',
-      message: error.message || 'An error occurred while curating resources. Please try again.'
+      error: "SERVER_ERROR",
+      message:
+        error.message ||
+        "An error occurred while curating resources. Please try again.",
     });
   }
 });
 
 // Delete a resource
-router.delete('/:resourceId', async (req, res) => {
+router.delete("/:resourceId", async (req, res) => {
   try {
     const { resourceId } = req.params;
-    const userId = req.headers['x-user-id'];
-    
+    const userId = req.headers["x-user-id"];
+
     if (!resourceId || !userId) {
       return res.status(400).json({
         success: false,
-        error: 'resourceId and userId are required'
+        error: "resourceId and userId are required",
       });
     }
 
     // Find and delete the resource — only if owned by this user
-    const deletedResource = await CuratedResource.findOneAndDelete({ _id: resourceId, userId });
-    
+    const deletedResource = await CuratedResource.findOneAndDelete({
+      _id: resourceId,
+      userId,
+    });
+
     if (!deletedResource) {
       return res.status(404).json({
         success: false,
-        error: 'Resource not found'
+        error: "Resource not found",
       });
     }
 
     res.json({
       success: true,
-      message: 'Resource deleted successfully'
+      message: "Resource deleted successfully",
     });
-
   } catch (error) {
-    console.error('Error deleting resource:', error);
+    console.error("Error deleting resource:", error);
     res.status(500).json({
       success: false,
-      error: 'Failed to delete resource'
+      error: "Failed to delete resource",
     });
   }
 });

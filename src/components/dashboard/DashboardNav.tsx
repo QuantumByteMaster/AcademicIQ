@@ -66,7 +66,7 @@ export function DashboardNav({ className, onCollapse, ...props }: DashboardNavPr
           href: '/resources',
         },
         {
-          label: 'Scriba',
+          label: 'Insight',
           icon: FileUp,
           href: '/pdf',
         },
