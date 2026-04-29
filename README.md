@@ -3,7 +3,7 @@
 
   # 🎓 AcademicIQ
 
-  **The Intelligent AI-Powered Hub for Lifelong Learners**
+  **An AI-Powered Hub for Lifelong Learners**
 
   [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
   [![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=nodedotjs)](https://nodejs.org/)
@@ -24,13 +24,11 @@
 
 ## 🌟 Overview
 
-**AcademicIQ** is a modern, AI-powered productivity platform meticulously designed to streamline study planning, resource management, and document interaction. By combining intelligent learning pathways with smart content discovery and comprehensive PDF analysis, AcademicIQ empowers students to stay organized, motivated, and ahead of the curve.
+**AcademicIQ** is an AI-powered productivity platform built to streamline study planning, resource management, and document interaction. By combining learning pathways with smart content discovery and PDF analysis, AcademicIQ helps students stay organized and focused on their coursework.
 
 ---
 
 ## 📸 See It In Action
-
-> **💡 Note to Dev:** Ensure your GIF is named `demo.gif` and placed in the `/public` folder!
 
 <div align="center">
   <img src="./public/demo.gif" alt="AcademicIQ Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
@@ -41,22 +39,22 @@
 ## ✨ Features
 
 ### 📅 Personalized Study Planner
-*   **Auto-Generation:** Instantly generate subject-based study schedules tailored to your goals.
-*   **Dynamic Plans:** Set exam dates to receive structured weekly and daily actionable plans.
-*   **Progress Tracking:** Visualize your learning journey with intuitive progress indicators and task tracking.
+*   **Auto-Generation:** Generate subject-based study schedules based on your goals.
+*   **Dynamic Plans:** Set exam dates to get weekly and daily actionable plans.
+*   **Progress Tracking:** Visualize your learning journey with progress indicators and task tracking.
 
 ### 🔍 Intelligent Resource Finder
-*   **Curated Discovery:** Find highly relevant videos, articles, courses, and interactive exercises.
-*   **AI Search Engine:** Powered by the cutting-edge **Tavily API** for hyper-accurate content retrieval.
-*   **Smart Filtering:** Sort and filter content by difficulty, format, and relevance to match your learning style.
+*   **Curated Discovery:** Find videos, articles, courses, and interactive exercises.
+*   **AI Search Engine:** Powered by the **Tavily API** for relevant content retrieval.
+*   **Smart Filtering:** Sort and filter content by difficulty, format, and relevance.
 
-### 📚 Insight Assistant (PDF Document Chat)
-*   **Context-Aware Chat:** Upload PDFs and converse with your documents directly.
+### 📚 Insight Assistant (PDF Chat)
+*   **Context-Aware Chat:** Upload PDFs and converse with your documents.
 *   **Source Referencing:** Get answers highlighted with specific page references from your text.
-*   **Split-View Interface:** Enjoy a synchronized PDF viewer alongside your chat for seamless reading.
+*   **Split-View Interface:** Synchronized PDF viewer alongside your chat for seamless reading.
 
-### 🎨 Premium User Experience
-*   **Modern UI Components:** Built with Shadcn UI and Tailwind CSS for a sleek, responsive design.
+### 🎨 Clean User Experience
+*   **Modern UI:** Built with Shadcn UI and Tailwind CSS for a responsive design.
 *   **Session Persistence:** Pick up exactly where you left off.
 *   **Data Visualization:** GitHub-style contribution heatmaps to track your daily study streaks.
 
@@ -64,21 +62,20 @@
 
 ## 🚀 Tech Stack
 
-### Frontend Application
+### Frontend
 *   **Framework:** Next.js 14 (App Router)
 *   **Language:** TypeScript
 *   **Styling:** Tailwind CSS + Shadcn UI
 *   **State Management:** Zustand & React Query
 *   **Document Rendering:** React-PDF + PDF.js
-*   **Authentication:** NextAuth.js (JWT-based secure authentication)
+*   **Auth:** NextAuth.js (JWT-based)
 
-### Backend Architecture
+### Backend
 *   **Runtime:** Node.js + Express
 *   **Database:** MongoDB + Mongoose ODM
-*   **AI & LLM Services:** Groq API (Inference)
-*   **Embeddings:** HuggingFace API (RAG pipelines)
-*   **Content Discovery:** Tavily API
-*   **Security:** JWT Security, Rate Limiting, Helmet, Input Validation
+*   **AI Models:** Groq API 
+*   **Embeddings:** HuggingFace API
+*   **Search:** Tavily API
 
 ---
 
@@ -95,7 +92,7 @@ cd AcademicIQ
 
 ### 2️⃣ Set Up Environment Variables
 
-Create a `.env` file in the root directory and configure the following variables:
+Create a `.env` file in the root directory:
 
 ```env
 # Authentication
@@ -111,7 +108,7 @@ NEXT_PUBLIC_API_URL=http://backend:5000
 API_URL=http://backend:5000
 INTERNAL_API_SECRET=your_internal_api_secret
 
-# AI & Third-Party APIs
+# AI APIs
 GROQ_API_KEY=your_groq_api_key
 GROQ_API_KEY_RAG=your_groq_api_key
 TAVILY_API_KEY=your_tavily_api_key
@@ -123,8 +120,6 @@ NEXT_PUBLIC_POSTHOG_HOST=https://us.posthog.com
 ```
 
 ### 3️⃣ Build & Run with Docker Compose
-
-AcademicIQ is containerized for a frictionless setup experience.
 
 ```bash
 # Build the containers
@@ -141,15 +136,15 @@ docker compose up -d
 
 ## 🎓 Usage Flow
 
-1.  **Initialize Study Planner:** Input your subject and upcoming exam date -> Allow AI to auto-generate your plan -> Check off daily tasks.
-2.  **Resource Discovery:** Search for a complex topic -> Filter through AI-curated resources -> Save them to your dashboard.
-3.  **PDF Chat (Insight):** Upload your dense academic PDF -> Ask specific questions -> Review answers alongside the exact source page.
+1.  **Initialize Study Planner:** Input your subject and upcoming exam date to auto-generate your plan.
+2.  **Resource Discovery:** Search for a topic and filter through AI-curated resources.
+3.  **PDF Chat (Insight):** Upload a PDF, ask questions, and review answers alongside the exact source page.
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions to make AcademicIQ even better! 
+We welcome contributions! 
 
 1. **Fork** the repository
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -162,7 +157,3 @@ We welcome contributions to make AcademicIQ even better!
 ## 📄 License
 
 Distributed under the Apache 2.0 License. See `LICENSE` for more information.
-
-<div align="center">
-  <i>Built with ❤️ by Raj Bhaskar</i>
-</div>
